@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum Error {
-    SOME_ERROR_ENUM("Some error message");
+    NO_PRODUCT_FOUND("Product not found");
 
     private final String message;
 }
