@@ -2,6 +2,7 @@ package eu.itcrafters.myproject.controller.product;
 
 
 import eu.itcrafters.myproject.controller.product.dto.ProductDto;
+import eu.itcrafters.myproject.controller.product.dto.ProductInfo;
 import eu.itcrafters.myproject.infrastructure.rest.error.ApiError;
 import eu.itcrafters.myproject.service.product.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,9 +32,12 @@ public class ProductController {
 
     })
     public ProductDto findProduct(@PathVariable Integer productId){
-        productService.findProduct(productId);
         return productService.findProduct(productId);
-
     }
 
+    @GetMapping("/products")
+    @Operation(summary = "Finds all products")
+    public List<ProductInfo> findAllProducts(){
+        return productService.findAllProducts();
+    }
 }

@@ -1,10 +1,10 @@
 package eu.itcrafters.myproject.persistence.product;
 
 import eu.itcrafters.myproject.controller.product.dto.ProductDto;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.ReportingPolicy;
+import eu.itcrafters.myproject.controller.product.dto.ProductInfo;
+import org.mapstruct.*;
+
+import java.util.List;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProductMapper {
@@ -14,4 +14,10 @@ public interface ProductMapper {
     @Mapping(source = "size", target = "size")
     @Mapping(source = "color", target = "color")
     ProductDto toDto(Product product);
+
+    @InheritConfiguration(name= "toDto")
+    @Mapping(source = "id", target = "productId")
+    ProductInfo toProductInfo(Product product);
+
+    List<ProductInfo> toProductInfos(List<Product> products);
 }
