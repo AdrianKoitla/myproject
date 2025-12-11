@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,4 +53,17 @@ public class ProductController {
     }
 
 
+    @PutMapping("/product/{productId}")
+    @Operation(summary = "Updates a product", description = "If there are any null value fields, those won´t get updated")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Invalid request body: payload validation failed",
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
+            @ApiResponse(responseCode = "404", description = "Product does not exist / ProductType not found",
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void updateProduct(@PathVariable Integer productId,@RequestBody @Valid ProductDto productDto){
+        productService.updateProduct(productId, productDto);
+
+    }
 }

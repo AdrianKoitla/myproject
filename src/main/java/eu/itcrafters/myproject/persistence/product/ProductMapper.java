@@ -2,6 +2,7 @@ package eu.itcrafters.myproject.persistence.product;
 
 import eu.itcrafters.myproject.controller.product.dto.ProductDto;
 import eu.itcrafters.myproject.controller.product.dto.ProductInfo;
+import jakarta.validation.Valid;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -26,4 +27,8 @@ public interface ProductMapper {
     @Mapping(source = "color", target = "color")
     @Mapping(target = "productType", ignore = true)
     Product toProduct(ProductDto productDto);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @InheritConfiguration(name = "toProduct")
+    Product updateProduct(ProductDto productDto, @MappingTarget Product product);
 }

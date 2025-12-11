@@ -10,6 +10,7 @@ import eu.itcrafters.myproject.persistence.product.ProductMapper;
 import eu.itcrafters.myproject.persistence.product.ProductRepository;
 import eu.itcrafters.myproject.persistence.producttype.ProductType;
 import eu.itcrafters.myproject.persistence.producttype.ProductTypeRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +27,7 @@ public class ProductService {
     private final ProductTypeRepository productTypeRepository;
 
     public void addProduct(ProductDto productDto) {
-        ProductType productType = productTypeRepository.findProductTypeBy(productDto.getProductType())
-                .orElseThrow(() -> new DataNotFoundException(Error.NO_PRODUCT_TYPE_FOUND.getMessage()));
+        ProductType productType = getValidProductType(productDto.getProductType());
         Product product = productMapper.toProduct(productDto);
         product.setProductType(productType);
         productRepository.save(product);
@@ -35,15 +35,34 @@ public class ProductService {
     }
 
     public ProductDto findProduct(Integer productId){
-       Product product = productRepository.findById(productId)
-               .orElseThrow(() -> new DataNotFoundException(Error.NO_PRODUCT_FOUND.getMessage()));
+        Product product = getValidProduct(productId);
         return productMapper.toDto(product);
 
     }
 
+
     public List<ProductInfo> findAllProducts() {
         List<Product> products = productRepository.findAll();
         return productMapper.toProductInfos(products);
+    }
+
+    public void updateProduct(Integer productId, @Valid ProductDto productDto) {
+        Product product = getValidProduct(productId);
+        ProductType productType = getValidProductType(productDto.getProductType());
+        productMapper.updateProduct(productDto, product);
+        product.setProductType(productType);
+        productRepository.save(product);
+    }
+
+    private ProductType getValidProductType(String productTypeName) {
+        return productTypeRepository.findProductTypeBy(productTypeName)
+                .orElseThrow(() -> new DataNotFoundException(Error.NO_PRODUCT_TYPE_FOUND.getMessage()));
+    }
+
+    private Product getValidProduct(Integer productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new DataNotFoundException(Error.NO_PRODUCT_FOUND.getMessage()));
+
     }
 
 }
