@@ -11,9 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +20,18 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+
+    @PostMapping("/product")
+    @Operation(summary = "Adds a product", description = "Adds a product. Throws error ´ProductType not found´ if productType is not found from system")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "ProductType not found",
+            content = @Content(schema = @Schema(implementation = ApiError.class))),
+    })
+    public void addProduct(@RequestBody ProductDto productDto){
+        productService.addProduct(productDto);
+
+    }
 
     @GetMapping("/product/{productId}")
     @Operation(summary = "Find product by id", description = "Finds product by id or throws an error if no product found")
@@ -40,4 +50,6 @@ public class ProductController {
     public List<ProductInfo> findAllProducts(){
         return productService.findAllProducts();
     }
+
+
 }

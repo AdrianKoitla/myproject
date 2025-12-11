@@ -20,4 +20,10 @@ public interface ProductMapper {
     ProductInfo toProductInfo(Product product);
 
     List<ProductInfo> toProductInfos(List<Product> products);
+
+    @Mapping(source = "productName", target = "name")
+    @Mapping(source = "size", target = "size")
+    @Mapping(source = "color", target = "color")
+    @Mapping(target = "productType", ignore = true)
+    Product toProduct(ProductDto productDto);
 }
