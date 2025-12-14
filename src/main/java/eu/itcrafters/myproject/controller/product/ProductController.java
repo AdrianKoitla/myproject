@@ -66,4 +66,19 @@ public class ProductController {
         productService.updateProduct(productId, productDto);
 
     }
+
+
+
+    @DeleteMapping("/product/{productId}")
+    @Operation(summary = "Deletes a product by its ID",
+    description = "Checks if any sale record exists with this product. If yes, sale record is deleted")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Product not found",
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public void deleteProduct(@PathVariable Integer productId){
+        productService.deleteProduct(productId);
+    }
 }
+

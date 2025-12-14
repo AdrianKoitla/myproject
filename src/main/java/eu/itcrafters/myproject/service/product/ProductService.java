@@ -10,9 +10,12 @@ import eu.itcrafters.myproject.persistence.product.ProductMapper;
 import eu.itcrafters.myproject.persistence.product.ProductRepository;
 import eu.itcrafters.myproject.persistence.producttype.ProductType;
 import eu.itcrafters.myproject.persistence.producttype.ProductTypeRepository;
+import eu.itcrafters.myproject.persistence.sale.Sale;
+import eu.itcrafters.myproject.persistence.sale.SaleRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +28,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final ProductTypeRepository productTypeRepository;
+    private final SaleRepository saleRepository;
 
     public void addProduct(ProductDto productDto) {
         ProductType productType = getValidProductType(productDto.getProductType());
@@ -54,6 +58,14 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    @Transactional
+    public void deleteProduct(Integer productId) {
+       Product product = getValidProduct(productId);
+
+       saleRepository.findSaleBy(product).ifPresent(saleRepository::delete);
+       productRepository.delete(product);
+    }
+
     private ProductType getValidProductType(String productTypeName) {
         return productTypeRepository.findProductTypeBy(productTypeName)
                 .orElseThrow(() -> new DataNotFoundException(Error.NO_PRODUCT_TYPE_FOUND.getMessage()));
@@ -64,5 +76,6 @@ public class ProductService {
                 .orElseThrow(() -> new DataNotFoundException(Error.NO_PRODUCT_FOUND.getMessage()));
 
     }
+
 
 }
