@@ -10,7 +10,6 @@ import eu.itcrafters.myproject.persistence.product.ProductMapper;
 import eu.itcrafters.myproject.persistence.product.ProductRepository;
 import eu.itcrafters.myproject.persistence.producttype.ProductType;
 import eu.itcrafters.myproject.persistence.producttype.ProductTypeRepository;
-import eu.itcrafters.myproject.persistence.sale.Sale;
 import eu.itcrafters.myproject.persistence.sale.SaleRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -31,14 +29,12 @@ public class ProductService {
     private final SaleRepository saleRepository;
 
     public void addProduct(ProductDto productDto) {
-        ProductType productType = getValidProductType(productDto.getProductType());
-        Product product = productMapper.toProduct(productDto);
-        product.setProductType(productType);
+        Product product = createProductFrom(productDto);
         productRepository.save(product);
 
     }
 
-    public ProductDto findProduct(Integer productId){
+    public ProductDto findProduct(Integer productId) {
         Product product = getValidProduct(productId);
         return productMapper.toDto(product);
 
@@ -51,19 +47,31 @@ public class ProductService {
     }
 
     public void updateProduct(Integer productId, @Valid ProductDto productDto) {
-        Product product = getValidProduct(productId);
-        ProductType productType = getValidProductType(productDto.getProductType());
-        productMapper.updateProduct(productDto, product);
-        product.setProductType(productType);
+        Product product = createUpdatedProductFrom(productId, productDto);
         productRepository.save(product);
     }
 
     @Transactional
     public void deleteProduct(Integer productId) {
-       Product product = getValidProduct(productId);
+        Product product = getValidProduct(productId);
 
-       saleRepository.findSaleBy(product).ifPresent(saleRepository::delete);
-       productRepository.delete(product);
+        saleRepository.findSaleBy(product).ifPresent(saleRepository::delete);
+        productRepository.delete(product);
+    }
+
+    private Product createUpdatedProductFrom(Integer productId, ProductDto productDto) {
+        Product product = getValidProduct(productId);
+        ProductType productType = getValidProductType(productDto.getProductType());
+        productMapper.updateProduct(productDto, product);
+        product.setProductType(productType);
+        return product;
+    }
+
+    private Product createProductFrom(ProductDto productDto) {
+        ProductType productType = getValidProductType(productDto.getProductType());
+        Product product = productMapper.toProduct(productDto);
+        product.setProductType(productType);
+        return product;
     }
 
     private ProductType getValidProductType(String productTypeName) {

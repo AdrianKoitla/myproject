@@ -10,5 +10,4 @@ public class ProductInfo extends ProductDto {
     private Integer productId;
 
 
-
 }

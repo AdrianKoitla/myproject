@@ -27,9 +27,9 @@ public class ProductController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "404", description = "ProductType not found",
-            content = @Content(schema = @Schema(implementation = ApiError.class))),
+                    content = @Content(schema = @Schema(implementation = ApiError.class))),
     })
-    public void addProduct(@RequestBody ProductDto productDto){
+    public void addProduct(@RequestBody ProductDto productDto) {
         productService.addProduct(productDto);
 
     }
@@ -42,13 +42,13 @@ public class ProductController {
                     content = @Content(schema = @Schema(implementation = ApiError.class))),
 
     })
-    public ProductDto findProduct(@PathVariable Integer productId){
+    public ProductDto findProduct(@PathVariable Integer productId) {
         return productService.findProduct(productId);
     }
 
     @GetMapping("/products")
     @Operation(summary = "Finds all products")
-    public List<ProductInfo> findAllProducts(){
+    public List<ProductInfo> findAllProducts() {
         return productService.findAllProducts();
     }
 
@@ -60,24 +60,23 @@ public class ProductController {
             @ApiResponse(responseCode = "400", description = "Invalid request body: payload validation failed",
                     content = @Content(schema = @Schema(implementation = ApiError.class))),
             @ApiResponse(responseCode = "404", description = "Product does not exist / ProductType not found",
-            content = @Content(schema = @Schema(implementation = ApiError.class)))
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
-    public void updateProduct(@PathVariable Integer productId,@RequestBody @Valid ProductDto productDto){
+    public void updateProduct(@PathVariable Integer productId, @RequestBody @Valid ProductDto productDto) {
         productService.updateProduct(productId, productDto);
 
     }
 
 
-
     @DeleteMapping("/product/{productId}")
     @Operation(summary = "Deletes a product by its ID",
-    description = "Checks if any sale record exists with this product. If yes, sale record is deleted")
+            description = "Checks if any sale record exists with this product. If yes, sale record is deleted")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "404", description = "Product not found",
-            content = @Content(schema = @Schema(implementation = ApiError.class)))
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
-    public void deleteProduct(@PathVariable Integer productId){
+    public void deleteProduct(@PathVariable Integer productId) {
         productService.deleteProduct(productId);
     }
 }
