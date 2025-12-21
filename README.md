@@ -115,6 +115,8 @@ On startup, Spring Boot will automatically run any `schema.sql` and `data.sql` f
 
 ## Available Endpoints
 
+### Product Endpoints
+
 | Method | Path                   | Description                          |
 | ------ |------------------------|--------------------------------------|
 | GET    | `/product/{productId}` | Retrieve a single product by its ID  |
@@ -122,5 +124,22 @@ On startup, Spring Boot will automatically run any `schema.sql` and `data.sql` f
 | POST   | `/product`             | Create a new product record          |
 | PUT    | `/product/{productId}` | Update an existing product’s details |
 | DELETE | `/product/{productId}` | Delete a product by its ID           |
+
+### Customer Endpoints
+
+| Method | Path                    | Description                           |
+| ------ |-------------------------|---------------------------------------|
+| GET    | `/customers`            | List all customers                    |
+| GET    | `/customers/{id}`       | Retrieve a single customer by its ID  |
+| POST   | `/customers`            | Create a new customer record          |
+| PUT    | `/customers/{id}`       | Update an existing customer's details |
+| DELETE | `/customers/{id}`       | Delete a customer by its ID           |
+
+### Sale Endpoints
+
+| Method | Path                    | Description                           |
+| ------ |-------------------------|---------------------------------------|
+| GET    | `/sales`                | List all sales                        |
+| POST   | `/sales`                | Create a new sale record              |
 
 ---
